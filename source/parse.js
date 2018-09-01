@@ -1,5 +1,7 @@
 "use strict"
 
+module.exports = parse;
+
 /**
  * Parses strings, numbers, and name bindings from the program script
  * @arg program The script string
@@ -14,7 +16,7 @@ function parseExpression (program) {
     // Parsing numbers: We look for chains of digits
     else if (match = /^\d+\b/.exec(program)) expr = { type: "value", value: Number(match[0]) };
     // Parsing words, aka binding names: We look for everything that doesn't contain a whitespace, slash, parentheses, quotes
-    else if (match = /^[^\s(),"]+/.exec(program)) expr = { type: "word", value: match[0] };
+    else if (match = /^[^\s(),"]+/.exec(program)) expr = { type: "word", name: match[0] };
     // Anything else is a syntax error
     else throw new SyntaxError("Unexpected syntax: " + program);
 
@@ -34,7 +36,7 @@ function parseApply (expr, program) {
     if (program[0] != "(") return { expr: expr, rest: program };
 
     program = skipSpace(program.slice(1));
-    expr = { type: "apply", expr: expr, args: [] };
+    expr = { type: "apply", operator: expr, args: [] };
 
     while (program[0] != ")") {
         let arg = parseExpression(program);
@@ -67,7 +69,3 @@ function skipSpace (str) {
     if (first == -1) return "";
     else return str.slice(first);
 }
-
-
-let prog = "do( define(x, 10), <(x, 5))(123)";
-console.log(JSON.stringify(parse(prog), null, 4));

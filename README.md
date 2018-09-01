@@ -2,7 +2,7 @@
 
 This project is proposed in the book: Eloquent JavaScript, 3rd edition, by Marijn Haverbeke.
 
-### Parsing:
+### Syntax:
 
 The syntax is the first visible part of a script in programming language.
 

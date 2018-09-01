@@ -1,6 +1,5 @@
 
-let str = 'a12';
+let parse = require("./parse.js")
 
-let match = /^[^\s(),"]+/.exec(str);
-
-console.log(match)
+let prog = "do ( define (x, 10), <(x, 5))"
+console.log(JSON.stringify(parse(prog), null, 4));
