@@ -1,6 +1,6 @@
 # Creating a new programming language, called Egg:
 
-This project is inspired from the book: Eloquent JavaScript, 3rd edition.
+This project is proposed in the book: Eloquent JavaScript, 3rd edition, by Marijn Haverbeke.
 
 ### Parsing:
 
