@@ -1,10 +1,10 @@
-# Creating a new programming language, called Egg:
+# Creating a new programming language, called Egg
 
 This project is proposed in the book: Eloquent JavaScript, 3rd edition, by Marijn Haverbeke.
 
-### Syntax:
+### Syntax
 
-The syntax is the first visible part of a script in programming language.
+The syntax is the first visible part of a script written in a programming language.
 
 The language we are building will have the following specifications:
 - Egg will be an expression-oriented language.

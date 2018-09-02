@@ -1,5 +1,12 @@
 "use strict"
 
+let parse = require("./parse.js")
+let topScope = require("./environment.js");
+
+module.exports = {
+    evaluate: evaluate,
+    run: run
+};
 
 /**
  * Object with keys holding all the pre-defined expressions in the language syntax, e.g. `do`, `if`, `define`, ..., and with values binded to JavaScript functions doing the actual job.
@@ -42,6 +49,12 @@ specialForms.define = (args, scope) => {
 }
 
 
+/**
+ * Translates typed expressions (like `word`, `value`, `apply`) to their actual value by retreiving it from memory or by processing it by function call.
+ * @arg expr The object from syntax tree to be evaluated
+ * @arg scope An object holding the defined bindings and actual scope of the program
+ * @returns The result of evaluating the given expression
+ */
 function evaluate (expr, scope) {
     if (expr.type == "value") return expr.value;
     else if (expr.type == "word") {
@@ -59,4 +72,13 @@ function evaluate (expr, scope) {
             else throw new TypeError("Applying a non-function.");
         }
     }
+}
+
+/**
+ * Runs a program in a newly created scope
+ * @arg program The text script to be parsed and evaluated
+ * @returns The evaluated value
+ */
+function run(program) {
+    return evaluate(parse(program), Object.create(topScope));
 }

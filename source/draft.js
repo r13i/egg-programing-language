@@ -1,5 +1,9 @@
 
-let parse = require("./parse.js")
+let parse = require("./parse.js");
+let {evaluate, run} = require("./evaluate.js");
+let scope = require("./environment.js");
 
-let prog = "do ( define (x, 10), <(x, 5))"
-console.log(JSON.stringify(parse(prog), null, 4));
+
+let prog = "if(*(2, 3), print(true), print(false))";
+
+
