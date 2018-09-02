@@ -18,3 +18,13 @@ The language we are building will have the following specifications:
     - Type `value` represents strings or numbers. Their `value` property holds the value of the expression.
     - Type `word` is used for identifiers, binding names, ..., with a `name` property holding the name string.
     - Type `apply` is used for applications, with an `operator` property refering to the expression being applied, and an 'args' property that is an array holding the arguments.
+
+### Additional features
+
+#### Arrays
+
+Arrays are implemented through the function `array` that builds the array from given arguments.
+
+Additional functions are :
+- `length` that returns the length of given array.
+- `element` that returns the array element at a given position.

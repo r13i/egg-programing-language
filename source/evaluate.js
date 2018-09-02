@@ -10,17 +10,20 @@ module.exports = {
 
 /**
  * Object with keys holding all the pre-defined expressions in the language syntax, e.g. `do`, `if`, `define`, ..., and with values binded to JavaScript functions doing the actual job.
+ * @property `if` is more like a ternary operator (i.e. (someExpressionToEvaluate) ? returnIfTrue : returnIfFalse) with 3 arguments
+ * @property `while`
+ * @property `do` executes all its arguments, and return the value produced by its last argument
+ * @property `define` adds variables to the scope
+ * @property `fun` defines new functions. The last argument is the function's body
  */
 let specialForms = Object.create(null);
 
-// `if` is more like a ternary operator (i.e. (someExpressionToEvaluate) ? returnIfTrue : returnIfFalse) with 3 arguments
 specialForms.if = (args, scope) => {
     if (args.length != 3) throw new SyntaxError(`if: Wrong number of arguments. Expected 3, received ${args.length}`);
     else if (evaluate(args[0], scope) !== false) return evaluate(args[1], scope);
     else return evaluate(args[2], scope);
 };
 
-// `while`
 specialForms.while = (args, scope) => {
     if (args.length != 2) throw new SyntaxError(`while: Wrong number of arguments. Expected 2, received ${args.length}`);
     while (evaluate(args[0], scope) !== false) evaluate(args[1], scope);
@@ -28,7 +31,6 @@ specialForms.while = (args, scope) => {
     return false;
 };
 
-// `do` executes all its arguments, and return the value produced by its last argument
 specialForms.do = (args, scope) => {
     let value = false;
     for (let arg of args) {
@@ -37,7 +39,6 @@ specialForms.do = (args, scope) => {
     return value;
 };
 
-// `define` 
 specialForms.define = (args, scope) => {
     if (args.length != 2 || args[0].type != "word") {
         throw new SyntaxError("Incorrect use of `define`");
@@ -46,6 +47,28 @@ specialForms.define = (args, scope) => {
     let value = evaluate(args[1], scope);
     scope[args[0].name] = value;
     return value;
+}
+
+specialForms.fun = (args, scope) => {
+    if (! args.length) throw new SyntaxError("Functions need a body");
+    
+    let body = args[args.length - 1];
+    let params = args.slice(0, args.length - 1).map(expr => {
+        if (expr.type != "word") throw new SyntaxError("Parameter names must be words");
+        return expr.name;
+    })
+
+    return function() {
+        // Verifying that when calling this new function, the right and expected number of arguments is passed
+        if (arguments.length != params.length) throw new TypeError("Wrong number of arguments");
+
+        // Creating and filling local scope with passed parameters
+        let localScope = Object.create(scope);
+        for (let idx = 0; idx < arguments.length; ++idx) {
+            localScope[params[idx]] = arguments[idx];
+        }
+        return evaluate(body, localScope);
+    }
 }
 
 
@@ -75,7 +98,7 @@ function evaluate (expr, scope) {
 }
 
 /**
- * Runs a program in a newly created scope
+ * Runs a program in a newly created scope - It is the interpreter
  * @arg program The text script to be parsed and evaluated
  * @returns The evaluated value
  */
